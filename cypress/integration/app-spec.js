@@ -35,7 +35,7 @@ describe('visiting the home page', () => {
       .find('input').eq(1)
       .should('exist')
 
-    cy.get('button')
+    cy.get('button').eq(0)
       .should('exist')
   })
 
@@ -77,7 +77,7 @@ describe('posting a shortened url', () => {
       }
     })
     cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', statusCode: 200})
-    cy.get('button').click();
+    cy.get('button').eq(0).click();
   })
 
   it('should find the newly added piece of mock data on the DOM', () => {
@@ -110,9 +110,20 @@ describe('sad path testing', () => {
       }
     })
 
-    cy.get('button').click()
+    cy.get('button').eq(0).click()
+    
     cy.get('.url')
       .should('have.length', 5)
   })
+})
 
+describe('deleting a card', () => {
+  it('should be able to delete a card', () => {
+    cy.intercept('DELETE', 'http://localhost:3001/**', { statusCode: 200})
+    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', statusCode: 200 } )
+    cy.get('button').eq(5).click()
+
+    cy.get('.url').eq(4)
+      .should('not.exist')
+  })
 })
