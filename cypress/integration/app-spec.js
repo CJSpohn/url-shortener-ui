@@ -101,9 +101,6 @@ describe('sad path testing', () => {
       .contains('Sorry something went wrong')
   })
 
-  //The server doesn't actually verify anything. An incomplete form is still sending back
-  //a successful request, and renders a card with nothing on it but I figured I could fake
-  //it here for the purpose of demonstrating I know how.
   it('should not update a new card if the user submits an incomplete form', () => {
     cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', statusCode: 200})
     cy.intercept('POST', 'http://localhost:3001/**', {
