@@ -23,7 +23,7 @@ const App = () => {
     setError(false);
     try {
       const postedUrl = await postUrl(url, title);
-      console.log(postedUrl)
+      console.log('posted', postedUrl)
       loadUrls()
     } catch(e) {
       setError(true)

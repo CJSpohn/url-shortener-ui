@@ -54,7 +54,7 @@ describe('visiting the home page', () => {
 
 describe('posting a shortened url', () => {
   it('should type into the form', () => {
-    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', statusCode: 200 })
+    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', status: 200 })
     cy.visit('http://localhost:3000/')
 
     cy.get('form')
@@ -68,11 +68,11 @@ describe('posting a shortened url', () => {
 
   it('should click the post button', () => {
     cy.intercept('POST', 'http://localhost:3001/**', {
-      statusCode:200,
+      status: 200,
       body: {
         id: 5,
         long_url: 'https://superfakeurl.com/please-shorten-this-in-the-test',
-        short_url: 'http://localhost:3001/useshorturl/4',
+        short_url: 'http://localhost:3001/useshorturl/5',
         title: 'Testing Post'
       }
     })
@@ -92,7 +92,7 @@ describe('posting a shortened url', () => {
 })
 
 describe('sad path testing', () => {
-  it('should let the user know if the fetches fail', () => {
+  it('should let the user know if the GET fails', () => {
     cy.intercept('GET', 'http://localhost:3001/**', {statusCode: 400})
     cy.visit('http://localhost:3000/')
 
@@ -100,4 +100,22 @@ describe('sad path testing', () => {
       .should('exist')
       .contains('Sorry something went wrong')
   })
+
+  //The server doesn't actually verify anything. An incomplete form is still sending back
+  //a successful request, and renders a card with nothing on it but I figured I could fake
+  //it here for the purpose of demonstrating I know how.
+  it('should not update a new card if the user submits an incomplete form', () => {
+    cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', status: 200})
+    cy.intercept('POST', 'http://localhost:3001/**', {
+      status: 400,
+      body: {
+        msg: "Failed to post, you are missing a URL or Title"
+      }
+    })
+
+    cy.get('button').click()
+    cy.get('.url')
+      .should('have.length', 5)
+  })
+
 })
