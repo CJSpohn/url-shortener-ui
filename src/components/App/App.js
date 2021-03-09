@@ -11,6 +11,7 @@ const App = () => {
   const loadUrls = async () => {
     try {
       const fetchedUrls = await getUrls()
+      console.log(fetchedUrls)
       setUrls(fetchedUrls.urls)
     } catch(e) {
       setError(true)
@@ -21,6 +22,7 @@ const App = () => {
     setError(false);
     try {
       const postedUrl = await postUrl(url, title);
+      console.log(postedUrl)
       loadUrls()
     } catch(e) {
       setError(true)

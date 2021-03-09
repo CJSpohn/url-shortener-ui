@@ -67,7 +67,6 @@ describe('posting a shortened url', () => {
   })
 
   it('should click the post button', () => {
-    cy.intercept('GET', 'http://localhost:3001/**', {fixtures: 'apiSamplePost.json', status: 200})
     cy.intercept('POST', 'http://localhost:3001/**', {
       statusCode:200,
       body: {
@@ -77,7 +76,13 @@ describe('posting a shortened url', () => {
         title: 'Testing Post'
       }
     })
+    cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', status: 200})
     cy.get('button').click();
+  })
 
+  it('should find the newly added piece of mock data on the DOM', () => {
+    cy.get('.url').eq(4)
+      .find('h3')
+      .contains('Fake Data 5')
   })
 })
