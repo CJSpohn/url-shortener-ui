@@ -1,5 +1,83 @@
 describe('visiting the home page', () => {
   it('should show the page title and existing shortened urls on load', () => {
-    
+    cy.intercept('http://localhost:3001/**', { fixture: 'apisamples.json', status: 200 })
+    cy.visit('http://localhost:3000/')
+
+    cy.get('h1')
+    .contains('URL Shortener')
+
+    cy.get('.url')
+      .should('have.length', 4)
+
+    cy.get('.url').eq(0)
+      .find('h3')
+      .contains('Fake Data 1')
+
+    cy.get('.url').eq(1)
+      .find('h3')
+      .contains('Fake Data 2')
+
+    cy.get('.url').eq(2)
+      .find('h3')
+      .contains('Fake Data 3')
+
+    cy.get('.url').eq(3)
+      .find('h3')
+      .contains('Fake Data 4')
+  })
+
+  it('should contain a form with the proper inputs', () => {
+    cy.get('form')
+      .find('input').eq(0)
+      .should('exist')
+
+    cy.get('form')
+      .find('input').eq(1)
+      .should('exist')
+
+    cy.get('button')
+      .should('exist')
+  })
+
+  it('information typed should be reflected in the inputs values', () => {
+    cy.get('form')
+      .find('input').eq(0)
+      .type('Test Me')
+      .should('have.value', 'Test Me')
+
+    cy.get('form')
+      .find('input').eq(1)
+      .type('https://images.unsplash.com/photo-1531898418865-480b7090470f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80')
+      .should('have.value', 'https://images.unsplash.com/photo-1531898418865-480b7090470f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80')
+  })
+})
+
+describe('posting a shortened url', () => {
+  it('should type into the form', () => {
+    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', status: 200 })
+    cy.visit('http://localhost:3000/')
+
+    cy.get('form')
+      .find('input').eq(0)
+      .type('Testing Post')
+
+    cy.get('form')
+      .find('input').eq(1)
+      .type('https://superfakeurl.com/please-shorten-this-in-the-test')
+  })
+
+  it('should click the post button', () => {
+    cy.intercept('GET', 'http://localhost:3001/**', {fixtures: 'apiSamplePost.json', status: 200})
+    cy.intercept('POST', 'http://localhost:3001/**', {
+      statusCode:200,
+      body: {
+        id: 5,
+        long_url: 'https://superfakeurl.com/please-shorten-this-in-the-test',
+        short_url: 'http://localhost:3001/useshorturl/4',
+        title: 'Testing Post'
+      }
+    })
+    cy.get('button').click();
+
   })
 })
