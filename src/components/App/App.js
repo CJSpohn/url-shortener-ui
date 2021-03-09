@@ -14,6 +14,7 @@ const App = () => {
       console.log(fetchedUrls)
       setUrls(fetchedUrls.urls)
     } catch(e) {
+      console.log(e)
       setError(true)
     }
   }
@@ -37,7 +38,7 @@ const App = () => {
     <main className="App">
       <header>
         <h1>URL Shortener</h1>
-        {error && <h1>Sorry something went wrong</h1>}
+        {error && <h1 className="error-message">Sorry something went wrong</h1>}
         <UrlForm shortenUrl={shortenUrl}/>
       </header>
       <UrlContainer urls={urls}/>

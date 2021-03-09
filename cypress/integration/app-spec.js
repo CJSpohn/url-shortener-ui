@@ -54,7 +54,7 @@ describe('visiting the home page', () => {
 
 describe('posting a shortened url', () => {
   it('should type into the form', () => {
-    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', status: 200 })
+    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', statusCode: 200 })
     cy.visit('http://localhost:3000/')
 
     cy.get('form')
@@ -76,7 +76,7 @@ describe('posting a shortened url', () => {
         title: 'Testing Post'
       }
     })
-    cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', status: 200})
+    cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', statusCode: 200})
     cy.get('button').click();
   })
 
@@ -88,5 +88,16 @@ describe('posting a shortened url', () => {
     cy.get('.url').eq(4)
       .find('a')
       .contains('http://localhost:3001/useshorturl/5')
+  })
+})
+
+describe('sad path testing', () => {
+  it('should let the user know if the fetches fail', () => {
+    cy.intercept('GET', 'http://localhost:3001/**', {statusCode: 400})
+    cy.visit('http://localhost:3000/')
+
+    cy.get('.error-message')
+      .should('exist')
+      .contains('Sorry something went wrong')
   })
 })
