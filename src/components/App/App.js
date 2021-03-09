@@ -7,6 +7,14 @@ import UrlForm from '../UrlForm/UrlForm';
 const App = () => {
   const [urls, setUrls] = useState([]);
 
+  const loadUrls = async () => {
+    const fetchedUrls = await getUrls()
+    setUrls(fetchedUrls.urls)
+  }
+
+  useEffect(() => {
+    loadUrls()
+  }, [])
 
   return (
     <main className="App">
