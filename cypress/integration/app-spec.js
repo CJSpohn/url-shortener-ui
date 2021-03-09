@@ -1,6 +1,6 @@
 describe('visiting the home page', () => {
   it('should show the page title and existing shortened urls on load', () => {
-    cy.intercept('http://localhost:3001/**', { fixture: 'apisamples.json', status: 200 })
+    cy.intercept('http://localhost:3001/**', { fixture: 'apisamples.json', statusCode: 200 })
     cy.visit('http://localhost:3000/')
 
     cy.get('h1')
@@ -54,7 +54,7 @@ describe('visiting the home page', () => {
 
 describe('posting a shortened url', () => {
   it('should type into the form', () => {
-    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', status: 200 })
+    cy.intercept('GET', 'http://localhost:3001/**', { fixture: 'apisamples.json', statusCode: 200 })
     cy.visit('http://localhost:3000/')
 
     cy.get('form')
@@ -105,9 +105,9 @@ describe('sad path testing', () => {
   //a successful request, and renders a card with nothing on it but I figured I could fake
   //it here for the purpose of demonstrating I know how.
   it('should not update a new card if the user submits an incomplete form', () => {
-    cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', status: 200})
+    cy.intercept('GET', 'http://localhost:3001/**', {fixture: 'apiSamplePost.json', statusCode: 200})
     cy.intercept('POST', 'http://localhost:3001/**', {
-      status: 400,
+      statusCode: 400,
       body: {
         msg: "Failed to post, you are missing a URL or Title"
       }
