@@ -21,7 +21,7 @@ const App = () => {
   const shortenUrl = async (url, title) => {
     setError(false);
     try {
-      const postedUrl = await postUrl(url, title);
+      await postUrl(url, title);
       loadUrls()
     } catch(e) {
       setError(true)
@@ -46,6 +46,7 @@ const App = () => {
       <header>
         <h1>URL Shortener</h1>
         {error && <h1 className="error-message">Sorry something went wrong</h1>}
+        {delError && <p className="del-err-msg">Couldn't delete post</p>}
         <UrlForm shortenUrl={shortenUrl}/>
       </header>
       <UrlContainer urls={urls} deleteCard={deleteCard}/>
