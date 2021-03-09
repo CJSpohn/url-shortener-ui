@@ -84,5 +84,9 @@ describe('posting a shortened url', () => {
     cy.get('.url').eq(4)
       .find('h3')
       .contains('Fake Data 5')
+
+    cy.get('.url').eq(4)
+      .find('a')
+      .contains('http://localhost:3001/useshorturl/5')
   })
 })
